@@ -1,0 +1,191 @@
+<div class="page-wrapper">
+  <!-- LEFT PANEL - Company Branding -->
+  <div class="company-panel">
+    <div class="company-content">
+      <h1 class="company-name">{{ companyName }}</h1>
+      <p class="company-title">{{ companyTitle }}</p>
+      <p class="company-subtitle">{{ companySubtitle }}</p>
+    </div>
+  </div>
+
+  <!-- RIGHT PANEL - Form -->
+  <div class="form-panel">
+    <div class="container">
+      <h1>Cadastro Facial</h1>
+      
+      <form [formGroup]="cadastroForm" (ngSubmit)="onSubmit()">
+        <div class="form-group">
+          <label for="nome">Nome Completo *</label>
+          <input 
+            type="text" 
+            id="nome" 
+            formControlName="nome"
+            placeholder="Digite seu nome">
+
+          <div class="error" 
+               *ngIf="cadastroForm.get('nome')?.invalid && cadastroForm.get('nome')?.touched">
+            Nome é obrigatório
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="cpf">CPF *</label>
+          <input 
+            type="text" 
+            id="cpf" 
+            formControlName="cpf"
+            placeholder="000.000.000-00" 
+            maxlength="14"
+            (input)="onCpfInput($event)">
+
+          <div class="error"
+               *ngIf="cadastroForm.get('cpf')?.errors?.['required'] && cadastroForm.get('cpf')?.touched">
+            CPF é obrigatório.
+          </div>
+
+          <div class="error"
+               *ngIf="cadastroForm.get('cpf')?.errors?.['pattern'] && cadastroForm.get('cpf')?.touched">
+            Formato inválido. Use 000.000.000-00.
+          </div>
+        </div>
+
+        <div class="photo-section">
+          <label>Foto Facial *</label>
+
+          <div class="photo-preview" [class.empty]="!hasPhoto">
+            <img *ngIf="capturedPhoto" [src]="capturedPhoto" alt="Foto">
+          </div>
+
+          <div class="error" *ngIf="formSubmitted && !hasPhoto">
+            A foto é obrigatória.
+          </div>
+          
+          <div class="button-group">
+            <button 
+              type="button" 
+              class="btn-secondary" 
+              (click)="triggerFileInput()">
+              📁 Fazer Upload
+            </button>
+
+            <button 
+              type="button" 
+              class="btn-primary" 
+              (click)="openCameraModal()">
+              📷 Capturar Foto
+            </button>
+          </div>
+
+          <input 
+            #fileInput
+            type="file" 
+            accept="image/*"
+            (change)="onFileSelected($event)"
+            style="display: none">
+          
+          <p class="hint-text">Ou arraste e solte uma imagem aqui</p>
+        </div>
+
+        <button type="submit" class="btn-success">
+          ✓ Cadastrar no Sistema
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Instruction Modal -->
+<div 
+  class="instruction-modal" 
+  [class.active]="showInstructionModal">
+  <div class="instruction-content">
+    <div class="instruction-header">
+      <h2>📸 Instruções para a Foto</h2>
+    </div>
+
+    <div class="instruction-body">
+      <div class="instruction-item">
+        <span class="instruction-icon">💡</span>
+        <div>
+          <h3>Boa Iluminação</h3>
+          <p>Certifique-se de estar em um ambiente bem iluminado</p>
+        </div>
+      </div>
+
+      <div class="instruction-item">
+        <span class="instruction-icon">👤</span>
+        <div>
+          <h3>Rosto Centralizado</h3>
+          <p>Posicione seu rosto dentro da área indicada</p>
+        </div>
+      </div>
+
+      <div class="instruction-item">
+        <span class="instruction-icon">😊</span>
+        <div>
+          <h3>Expressão Natural</h3>
+          <p>Mantenha uma expressão neutra e olhe para a câmera</p>
+        </div>
+      </div>
+
+      <div class="instruction-item">
+        <span class="instruction-icon">👓</span>
+        <div>
+          <h3>Sem Acessórios</h3>
+          <p>Remova óculos escuros, bonés ou máscaras</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="instruction-footer">
+      <button 
+        type="button"
+        class="btn-secondary" 
+        (click)="closeInstructionModal()">
+        Cancelar
+      </button>
+      <button 
+        type="button"
+        class="btn-primary" 
+        (click)="startCamera()">
+        Entendi, Abrir Câmera
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Camera Modal -->
+<div 
+  class="camera-modal" 
+  [class.active]="isCameraOpen"
+  (keydown)="onKeydown($event)">
+  <div class="camera-header">
+    <h2>Tire sua foto</h2>
+    <button 
+      type="button"
+      class="btn-close" 
+      (click)="closeCamera()">
+      ✕ Fechar
+    </button>
+  </div>
+
+  <div class="camera-container">
+    <video #video autoplay playsinline></video>
+    <div class="face-guide">
+      <div class="guide-text">Posicione seu rosto aqui</div>
+    </div>
+  </div>
+
+  <div class="camera-control-container">
+    <div class="camera-controls">
+      <div class="capture-hint">Aperte o botão para tirar a foto</div>
+
+      <button 
+        type="button"
+        class="btn-capture" 
+        (click)="capturePhoto()"></button>
+    </div>
+  </div>
+</div>
+
+<canvas #canvas style="display: none"></canvas>

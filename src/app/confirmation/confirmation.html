@@ -1,0 +1,25 @@
+<div class="container">
+  <div class="card">
+    <h2>Confirmação de Dados</h2>
+    
+    <div class="info-section">
+      <div class="info-item">
+        <span class="info-label">Nome</span>
+        <span class="info-value">{{ dados.nome }}</span>
+      </div>
+      <div class="info-item">
+        <span class="info-label">CPF</span>
+        <span class="info-value">{{ dados.cpf }}</span>
+      </div>
+    </div>
+
+    <div class="photo-container">
+      <img [src]="dados.foto" alt="Foto do cadastro">
+    </div>
+
+    <div class="button-group">
+      <button class="btn-back" (click)="goBack()">Voltar</button>
+      <button class="btn-confirm" (click)="onConfirm()">Confirmar</button>
+    </div>
+  </div>
+</div>
