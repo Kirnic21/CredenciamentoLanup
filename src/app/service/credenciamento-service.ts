@@ -30,7 +30,7 @@ interface Credenciamento {
   providedIn: 'root',
 })
 export class CredenciamentoService {
-    private apiUrl = `${environment.API_URL}/Credenciamentos`;
+    private apiUrl = `/Credenciamentos`;
 
   constructor(private http: HttpClient) {}
 
