@@ -1,4 +1,4 @@
 export const environment = {
-  production: false,
-  API_URL: 'https://credenciamentosapi.azurewebsites.net/api'
+  production: true,
+  API_URL: (window as any).__env?.API_URL
 };
